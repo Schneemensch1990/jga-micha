@@ -2,33 +2,28 @@
 const scoreElement = document.getElementById('current-score');
 const progressBar = document.getElementById('progress-bar');
 
-// Navigation Buttons
 const btnTasks = document.getElementById('btn-tasks');
 const btnQuiz = document.getElementById('btn-quiz');
 const btnAdmin = document.getElementById('btn-admin');
 
-// Views (Ansichten)
 const viewTasks = document.getElementById('view-tasks');
 const viewQuiz = document.getElementById('view-quiz');
 const viewAdmin = document.getElementById('view-admin');
 
-// Admin Login Elemente
 const pinInput = document.getElementById('admin-pin-input');
 const btnLogin = document.getElementById('btn-login');
 const adminError = document.getElementById('admin-error');
 
 // --- Globale Einstellungen ---
-const ADMIN_PIN = "7890"; // Deine festgelegte PIN
-const MAX_SCORE = 100; // Euer Ziel für Mitternacht
+const ADMIN_PIN = "7890";
+const MAX_SCORE = 100;
 
 // --- NAVIGATION LOGIK ---
 function switchTab(activeBtn, activeView) {
-    // Alle Buttons zurücksetzen
     btnTasks.classList.remove('active');
     btnQuiz.classList.remove('active');
     btnAdmin.classList.remove('active');
     
-    // Alle Views verstecken
     viewTasks.classList.remove('active');
     viewTasks.classList.add('hidden');
     viewQuiz.classList.remove('active');
@@ -36,13 +31,11 @@ function switchTab(activeBtn, activeView) {
     viewAdmin.classList.remove('active');
     viewAdmin.classList.add('hidden');
     
-    // Geklickten Button & View aktivieren
     activeBtn.classList.add('active');
     activeView.classList.remove('hidden');
     activeView.classList.add('active');
 }
 
-// Event Listener für die Klicks auf die Tabs
 btnTasks.addEventListener('click', () => switchTab(btnTasks, viewTasks));
 btnQuiz.addEventListener('click', () => switchTab(btnQuiz, viewQuiz));
 btnAdmin.addEventListener('click', () => switchTab(btnAdmin, viewAdmin));
@@ -75,16 +68,45 @@ function updateScore(points) {
     progressBar.style.width = percentage + "%";
 }
 
-// --- AUFGABEN RENDERN & LOGIK ---
-let currentPoints = 0; 
+// --- FIREBASE LIVE-SYNCHRONISATION & AUFGABEN ---
+const gameDocRef = db.collection('game').doc('current');
+let completedTaskIds = []; 
 
+// 1. Live-Listener: Hört auf jede Änderung in der Datenbank
+gameDocRef.onSnapshot((doc) => {
+    if (doc.exists) {
+        const data = doc.data();
+        completedTaskIds = data.completedTasks || [];
+        
+        // Punkte anhand der abgehakten Aufgaben neu berechnen
+        let newScore = 0;
+        if (typeof jgaTasks !== 'undefined') {
+            jgaTasks.forEach(task => {
+                if (completedTaskIds.includes(task.id)) {
+                    newScore += task.points;
+                }
+            });
+            renderTasks(); // Karten neu zeichnen (um die Haken live zu setzen/entfernen)
+        }
+        
+        updateScore(newScore);
+    } else {
+        // Falls das Dokument noch gar nicht existiert, erstellen wir es jetzt (Startzustand)
+        gameDocRef.set({ completedTasks: [] });
+    }
+});
+
+// 2. Aufgaben-Karten generieren
 function renderTasks() {
     viewTasks.innerHTML = '<h2 style="margin-bottom: 15px;">Aufgaben 📋</h2>';
     
     jgaTasks.forEach(task => {
         const card = document.createElement('div');
         const typeClass = task.type.toLowerCase().replace('ä', 'ae'); 
-        card.className = `task-card ${typeClass}`;
+        const isCompleted = completedTaskIds.includes(task.id);
+        
+        // Wenn die Aufgabe erledigt ist, bekommt sie sofort die 'completed' Klasse
+        card.className = `task-card ${typeClass} ${isCompleted ? 'completed' : ''}`;
         
         card.innerHTML = `
             <div class="task-info">
@@ -94,26 +116,26 @@ function renderTasks() {
             <p>${task.text}</p>
         `;
         
+        // Klick-Logik: Speichert den Haken live in der Datenbank
         card.addEventListener('click', () => {
-            card.classList.toggle('completed');
-            
-            if (card.classList.contains('completed')) {
-                currentPoints += task.points;
-            } else {
-                currentPoints -= task.points;
+            if (!isAdmin) {
+                alert("🔒 Nur Admins dürfen Aufgaben abhaken! Bitte gib zuerst die PIN im Admin-Bereich ein.");
+                return;
             }
             
-            updateScore(currentPoints);
+            let updatedTasks = [...completedTaskIds];
+            if (isCompleted) {
+                // Rückgängig machen (Entfernt die ID aus der Liste)
+                updatedTasks = updatedTasks.filter(id => id !== task.id);
+            } else {
+                // Abhaken (Fügt die ID zur Liste hinzu)
+                updatedTasks.push(task.id);
+            }
+            
+            // Sende das Update live an Firebase!
+            gameDocRef.update({ completedTasks: updatedTasks });
         });
         
         viewTasks.appendChild(card);
     });
-}
-
-// Initiale Aufrufe
-updateScore(0);
-if (typeof jgaTasks !== 'undefined') {
-    renderTasks();
-} else {
-    viewTasks.innerHTML = '<h2 style="color: red;">Fehler: Aufgaben konnten nicht geladen werden. Bitte tasks.js prüfen!</h2>';
 }
