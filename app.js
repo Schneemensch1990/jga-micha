@@ -82,12 +82,53 @@ btnLogin.addEventListener('click', () => {
 });
 
 // --- PUNKTE LOGIK & FORTSCHRITT ---
+let hasCelebrated = false;
+
 function updateScore(points) {
     scoreElement.innerText = points;
     let percentage = (points / MAX_SCORE) * 100;
     if (percentage > 100) percentage = 100;
     progressBar.style.width = percentage + "%";
+
+    // Konfetti & Popup Logik bei 100 Punkten
+    if (points >= MAX_SCORE && !hasCelebrated) {
+        hasCelebrated = true;
+        document.getElementById('success-modal').classList.remove('hidden');
+        fireConfetti();
+    } else if (points < MAX_SCORE) {
+        hasCelebrated = false; // Zurücksetzen, falls wieder Punkte abgezogen werden
+    }
 }
+
+// --- KONFETTI FUNKTION & ERFOLGS-MODAL ---
+function fireConfetti() {
+    var duration = 5 * 1000; // Konfetti regnet für 5 Sekunden
+    var animationEnd = Date.now() + duration;
+    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+        var particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        }));
+        confetti(Object.assign({}, defaults, { particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        }));
+    }, 250);
+}
+
+// Schließen-Button für das Erfolgs-Popup
+document.getElementById('btn-close-success').addEventListener('click', () => {
+    document.getElementById('success-modal').classList.add('hidden');
+});
 
 // --- FIREBASE LIVE-SYNCHRONISATION ---
 const gameDocRef = db.collection('game').doc('current');
