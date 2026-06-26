@@ -114,7 +114,32 @@ gameDocRef.onSnapshot((doc) => {
 
 // --- AUFGABEN RENDERN ---
 function renderTasks() {
-    viewTasks.innerHTML = '<h2 style="margin-bottom: 15px;">Aufgaben 📋</h2>';
+    // 1. Überschrift und Zufalls-Button einfügen
+    viewTasks.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2>Aufgaben 📋</h2>
+            <button id="btn-random" style="background: var(--werder-green); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">🎲 Zufall</button>
+        </div>
+    `;
+    
+    // 2. Logik für den Zufalls-Button
+    document.getElementById('btn-random').addEventListener('click', () => {
+        // Alle Aufgaben filtern, die noch nicht abgehakt sind
+        const offeneAufgaben = jgaTasks.filter(task => !completedTaskIds.includes(task.id));
+        
+        if (offeneAufgaben.length === 0) {
+            alert("Wahnsinn! Ihr habt bereits alle Aufgaben erledigt! 🍻");
+            return;
+        }
+        
+        // Eine zufällige Aufgabe auswählen
+        const randomTask = offeneAufgaben[Math.floor(Math.random() * offeneAufgaben.length)];
+        
+        // Aufgabe als Popup anzeigen
+        alert(`🎲 EURE ZUFALLSAUFGABE:\n\nKategorie: ${getCategoryEmoji(randomTask.category)}\nPunkte: +${randomTask.points}\n\nAufgabe:\n"${randomTask.text}"`);
+    });
+
+    // 3. Karten zeichnen
     jgaTasks.forEach(task => {
         const card = document.createElement('div');
         const typeClass = task.type.toLowerCase().replace('ä', 'ae'); 
@@ -122,6 +147,30 @@ function renderTasks() {
         
         card.className = `task-card ${typeClass} ${isCompleted ? 'completed' : ''}`;
         
+        card.innerHTML = `
+            <div class="task-info">
+                <span class="task-category">${getCategoryEmoji(task.category)}</span>
+                <span class="task-points">+${task.points}</span>
+            </div>
+            <p>${task.text}</p>
+        `;
+        
+        card.addEventListener('click', () => {
+            if (!isAdmin) {
+                alert("🔒 Nur Admins dürfen Aufgaben abhaken!");
+                return;
+            }
+            let updatedTasks = [...completedTaskIds];
+            if (isCompleted) {
+                updatedTasks = updatedTasks.filter(id => id !== task.id);
+            } else {
+                updatedTasks.push(task.id);
+            }
+            gameDocRef.update({ completedTasks: updatedTasks });
+        });
+        viewTasks.appendChild(card);
+    });
+}
         // HIER WIRD DAS EMOJI EINGEFÜGT:
         card.innerHTML = `
             <div class="task-info">
