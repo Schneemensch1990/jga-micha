@@ -1,0 +1,57 @@
+const jgaTasks = [
+    // --- BRONZE (+1) ---
+    { id: "b1", text: "Selfie mit einem Hund", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b2", text: "Selfie mit einem Fahrradkurier", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b3", text: "Von einem Fremden einen Berlin-Tipp bekommen", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b4", text: "Ein Foto mit einem Cabrio", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b5", text: "Einen Oldtimer entdecken", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b6", text: "Ein Gruppenfoto mit einem Touristen", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b7", text: "Ein Straßenschild mit lustigem Namen finden", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b8", text: "Foto mit einem Straßenmusiker", points: 1, type: "Bronze", category: "Berlin" },
+    { id: "b9", text: "Ein Bier empfohlen bekommen", points: 1, type: "Bronze", category: "Bier" },
+    { id: "b10", text: "Mit einem Fremden auf den JGA anstoßen", points: 1, type: "Bronze", category: "Bier" },
+    { id: "b11", text: "Jemanden finden, der heute Geburtstag hat", points: 1, type: "Bronze", category: "Bier" },
+    { id: "b12", text: "Einen Fußballfan finden", points: 1, type: "Bronze", category: "Fußball" },
+    { id: "b13", text: "Einen Werder-Fan finden", points: 1, type: "Bronze", category: "Fußball" },
+    { id: "b14", text: "Jemanden finden, der schon einmal im Weserstadion war", points: 1, type: "Bronze", category: "Fußball" },
+    { id: "b15", text: "Mit einem Fremden über Werder Bremen sprechen", points: 1, type: "Bronze", category: "Fußball" },
+
+    // --- SILBER (+3) ---
+    { id: "s1", text: "Berliner Geheimtipp sammeln", points: 3, type: "Silber", category: "Berlin" },
+    { id: "s2", text: "Selfie mit einem Taxifahrer", points: 3, type: "Silber", category: "Berlin" },
+    { id: "s3", text: "Foto mit einem Fahrzeug aus einem anderen Land", points: 3, type: "Silber", category: "Berlin" },
+    { id: "s4", text: "Gruppe Touristen für ein gemeinsames Foto gewinnen", points: 3, type: "Silber", category: "Berlin" },
+    { id: "s5", text: "Drei verschiedene Biersorten trinken", points: 3, type: "Silber", category: "Bier" },
+    { id: "s6", text: "Fünf Fremde zu einem gemeinsamen 'Prost' bewegen", points: 3, type: "Silber", category: "Bier" },
+    { id: "s7", text: "Fan eines Werder-Rivalen finden", points: 3, type: "Silber", category: "Fußball" },
+    { id: "s8", text: "Fußballsong mit Fremden anstimmen", points: 3, type: "Silber", category: "Fußball" },
+    { id: "s9", text: "Runde Tischkicker gegen Fremde gewinnen", points: 3, type: "Silber", category: "Fußball" },
+    { id: "s10", text: "Jemanden finden, der länger Werder-Fan ist als Micha alt ist", points: 3, type: "Silber", category: "Fußball" },
+    { id: "s11", text: "Drei Hochzeitsglückwünsche sammeln", points: 3, type: "Silber", category: "Hochzeit" },
+    { id: "s12", text: "Jemanden finden, der länger als 25 Jahre verheiratet ist", points: 3, type: "Silber", category: "Hochzeit" },
+
+    // --- GOLD (+5) ---
+    { id: "g1", text: "Gruppenfoto mit mindestens 10 Fremden", points: 5, type: "Gold", category: "Berlin" },
+    { id: "g2", text: "Berlin-Insider-Tipp erhalten, den niemand kennt", points: 5, type: "Gold", category: "Berlin" },
+    { id: "g3", text: "Junggesellenabschied treffen und gemeinsames Foto machen", points: 5, type: "Gold", category: "Berlin" },
+    { id: "g4", text: "Fremden zu einer Hochzeitsrede für Micha bewegen", points: 5, type: "Gold", category: "Bier" },
+    { id: "g5", text: "Einen kompletten Tisch Fremder zum Gruppenfoto bewegen", points: 5, type: "Gold", category: "Bier" },
+    { id: "g6", text: "Kurzes Interview mit einem Fußballfan aufnehmen", points: 5, type: "Gold", category: "Fußball" },
+    { id: "g7", text: "Fan von Hertha UND Union finden", points: 5, type: "Gold", category: "Fußball" },
+    { id: "g8", text: "Fan von Werder und St. Pauli gemeinsam aufs Foto bekommen", points: 5, type: "Gold", category: "Fußball" },
+    { id: "g9", text: "Mit 5 Fremden einen Torjubel nachstellen", points: 5, type: "Gold", category: "Fußball" },
+    { id: "g10", text: "Fremden finden, der länger verheiratet ist als Micha alt ist", points: 5, type: "Gold", category: "Hochzeit" },
+
+    // --- LEGENDÄR (+10) ---
+    { id: "l1", text: "Foto mit echter Hochzeitsgesellschaft", points: 10, type: "Legendär", category: "Berlin" },
+    { id: "l2", text: "20 Fremde für ein Gruppenfoto zusammentrommeln", points: 10, type: "Legendär", category: "Berlin" },
+    { id: "l3", text: "Straßenmusiker widmet Micha ein Lied", points: 10, type: "Legendär", category: "Berlin" },
+    { id: "l4", text: "Barkeeper benennt einen Shot nach Micha", points: 10, type: "Legendär", category: "Bier" },
+    { id: "l5", text: "Drei Bierempfehlungen von drei Fremden sammeln und probieren", points: 10, type: "Legendär", category: "Bier" },
+    { id: "l6", text: "Spontanes Elfmeterschießen gegen Fremde organisieren", points: 10, type: "Legendär", category: "Fußball" },
+    { id: "l7", text: "Fan von Hertha UND Union auf EIN Foto bekommen", points: 10, type: "Legendär", category: "Fußball" },
+    { id: "l8", text: "Stadiondurchsage für Micha aufnehmen lassen", points: 10, type: "Legendär", category: "Fußball" },
+    { id: "l9", text: "Fremden mit gleichem Vornamen wie Micha finden", points: 10, type: "Legendär", category: "Komplett verrückt" },
+    { id: "l10", text: "11 Fremde für ein komplettes Mannschaftsfoto organisieren", points: 10, type: "Legendär", category: "Komplett verrückt" },
+    { id: "l11", text: "Ganze U-Bahn-Gruppe zu einem gemeinsamen 'Prost' bewegen", points: 10, type: "Legendär", category: "Komplett verrückt" }
+];
