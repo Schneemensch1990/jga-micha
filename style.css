@@ -204,3 +204,59 @@ input[type="password"] {
 .silber .task-points { color: var(--silber); }
 .gold .task-points { color: var(--gold); }
 .legendaer .task-points { color: var(--legend); }
+
+/* Quiz Buttons & Layout */
+.btn-reveal {
+    background-color: #333333;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.btn-reveal:hover {
+    background-color: #444444;
+}
+
+.quiz-answer {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.quiz-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.quiz-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    color: white;
+}
+
+.btn-correct { background-color: var(--werder-green); }
+.btn-wrong { background-color: #d32f2f; }
+
+.btn-reset {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    width: 100%;
+}
