@@ -18,6 +18,21 @@ const adminError = document.getElementById('admin-error');
 const ADMIN_PIN = "7890";
 const MAX_SCORE = 100;
 
+// --- EMOJI HELPER ---
+function getCategoryEmoji(category) {
+    const icons = {
+        "Berlin": "🐻",
+        "Bier": "🍻",
+        "Fußball": "⚽",
+        "Hochzeit": "💍",
+        "Komplett verrückt": "🤪",
+        "Bierwissen": "🍻🧠",
+        "Fußballwissen": "⚽🧠",
+        "Schätzfragen": "🧐"
+    };
+    return icons[category] ? `${category} ${icons[category]}` : category;
+}
+
 // --- NAVIGATION LOGIK ---
 function switchTab(activeBtn, activeView) {
     btnTasks.classList.remove('active');
@@ -69,16 +84,14 @@ function updateScore(points) {
 // --- FIREBASE LIVE-SYNCHRONISATION ---
 const gameDocRef = db.collection('game').doc('current');
 let completedTaskIds = []; 
-let quizStates = {}; // Speichert, ob ein Quiz "correct" oder "wrong" ist
+let quizStates = {}; 
 
-// Live-Listener
 gameDocRef.onSnapshot((doc) => {
     if (doc.exists) {
         const data = doc.data();
         completedTaskIds = data.completedTasks || [];
         quizStates = data.quizStates || {};
         
-        // Punkte berechnen (Aufgaben + richtige Quizfragen)
         let newScore = 0;
         if (typeof jgaTasks !== 'undefined') {
             jgaTasks.forEach(task => {
@@ -108,9 +121,11 @@ function renderTasks() {
         const isCompleted = completedTaskIds.includes(task.id);
         
         card.className = `task-card ${typeClass} ${isCompleted ? 'completed' : ''}`;
+        
+        // HIER WIRD DAS EMOJI EINGEFÜGT:
         card.innerHTML = `
             <div class="task-info">
-                <span class="task-category">${task.category}</span>
+                <span class="task-category">${getCategoryEmoji(task.category)}</span>
                 <span class="task-points">+${task.points}</span>
             </div>
             <p>${task.text}</p>
@@ -140,22 +155,22 @@ function renderQuiz() {
     jgaQuiz.forEach(q => {
         const card = document.createElement('div');
         const typeClass = q.type.toLowerCase().replace('ä', 'ae');
-        const state = quizStates[q.id]; // 'correct', 'wrong' oder undefined
+        const state = quizStates[q.id]; 
         
         card.className = `task-card ${typeClass} ${state ? 'completed' : ''}`;
         
-        // Optische Anpassung je nach Status
         let statusText = "";
         if (state === 'wrong') {
-            card.style.borderColor = '#d32f2f'; // Rot für falsch
+            card.style.borderColor = '#d32f2f';
             statusText = "<p style='color: #d32f2f; margin-top: 10px;'><em>❌ Falsch beantwortet (0 Punkte)</em></p>";
         } else if (state === 'correct') {
             statusText = "<p style='color: var(--werder-green); margin-top: 10px;'><em>✅ Richtig beantwortet!</em></p>";
         }
 
+        // HIER WIRD DAS EMOJI EINGEFÜGT:
         card.innerHTML = `
             <div class="task-info">
-                <span class="task-category">${q.category}</span>
+                <span class="task-category">${getCategoryEmoji(q.category)}</span>
                 <span class="task-points">+${q.points}</span>
             </div>
             <p style="font-size: 1.1rem; margin-bottom: 10px;"><strong>${q.question}</strong></p>
@@ -180,7 +195,7 @@ function renderQuiz() {
     });
 }
 
-// Globale Funktionen für die Quiz-Buttons (aus HTML aufrufbar)
+// Globale Funktionen für die Quiz-Buttons
 window.toggleAnswer = function(id) {
     document.getElementById(`ans-${id}`).classList.toggle('hidden');
 };
@@ -192,9 +207,9 @@ window.submitQuiz = function(id, status) {
     }
     let updatedQuizStates = { ...quizStates };
     if (status === null) {
-        delete updatedQuizStates[id]; // Reset
+        delete updatedQuizStates[id];
     } else {
-        updatedQuizStates[id] = status; // Setze 'correct' oder 'wrong'
+        updatedQuizStates[id] = status;
     }
     gameDocRef.update({ quizStates: updatedQuizStates });
 };
