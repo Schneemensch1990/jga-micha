@@ -78,6 +78,49 @@ function updateScore(points) {
     if (percentage > 100) percentage = 100;
     
     progressBar.style.width = percentage + "%";
+// --- AUFGABEN RENDERN & LOGIK ---
+let currentPoints = 0; // Lokaler Punktestand (wird später mit Firebase verknüpft)
+
+function renderTasks() {
+    // Leere den Container und setze eine Überschrift
+    viewTasks.innerHTML = '<h2 style="margin-bottom: 15px;">Aufgaben 📋</h2>';
+    
+    jgaTasks.forEach(task => {
+        // Erstelle eine Karte für jede Aufgabe
+        const card = document.createElement('div');
+        // Entferne Umlaute für saubere CSS-Klassennamen (z.B. legendär -> legendär)
+        const typeClass = task.type.toLowerCase().replace('ä', 'ae'); 
+        card.className = `task-card ${typeClass}`;
+        
+        card.innerHTML = `
+            <div class="task-info">
+                <span class="task-category">${task.category}</span>
+                <span class="task-points">+${task.points}</span>
+            </div>
+            <p>${task.text}</p>
+        `;
+        
+        // Klick-Logik zum Abhaken
+        card.addEventListener('click', () => {
+            card.classList.toggle('completed');
+            
+            // Punkte berechnen (Punkte dazu oder wieder abziehen, wenn rückgängig)
+            if (card.classList.contains('completed')) {
+                currentPoints += task.points;
+            } else {
+                currentPoints -= task.points;
+            }
+            
+            updateScore(currentPoints);
+        });
+        
+        viewTasks.appendChild(card);
+    });
+}
+
+// Starte das Generieren der Aufgaben
+renderTasks();
+
 }
 
 // Initialer Test-Aufruf, um zu sehen, ob der Balken funktioniert (wird später durch Firebase ersetzt)
