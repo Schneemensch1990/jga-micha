@@ -156,6 +156,7 @@ input[type="password"] {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
 
 /* Aufgaben Karten */
 .task-card {
@@ -203,4 +204,3 @@ input[type="password"] {
 .silber .task-points { color: var(--silber); }
 .gold .task-points { color: var(--gold); }
 .legendaer .task-points { color: var(--legend); }
-}

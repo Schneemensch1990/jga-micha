@@ -56,39 +56,33 @@ btnLogin.addEventListener('click', () => {
         adminError.classList.add('hidden');
         pinInput.value = '';
         
-        // Admin-Ansicht nach erfolgreichem Login anpassen
         viewAdmin.innerHTML = `
             <h2>Admin Bereich entsperrt 🔓</h2>
             <p style="margin-top: 15px; color: var(--werder-green);">Du hast jetzt Admin-Rechte für die Live-Synchronisation!</p>
         `;
-        
-        // Hier rendern wir später die Admin-Controls neu
     } else {
         adminError.classList.remove('hidden');
     }
 });
 
 // --- PUNKTE LOGIK & FORTSCHRITT ---
-// Diese Funktion bereitet den Live-Punktestand vor, der bald aus Firebase kommt
 function updateScore(points) {
     scoreElement.innerText = points;
     
-    // Fortschrittsbalken berechnen (max 100%)
     let percentage = (points / MAX_SCORE) * 100;
     if (percentage > 100) percentage = 100;
     
     progressBar.style.width = percentage + "%";
+}
+
 // --- AUFGABEN RENDERN & LOGIK ---
-let currentPoints = 0; // Lokaler Punktestand (wird später mit Firebase verknüpft)
+let currentPoints = 0; 
 
 function renderTasks() {
-    // Leere den Container und setze eine Überschrift
     viewTasks.innerHTML = '<h2 style="margin-bottom: 15px;">Aufgaben 📋</h2>';
     
     jgaTasks.forEach(task => {
-        // Erstelle eine Karte für jede Aufgabe
         const card = document.createElement('div');
-        // Entferne Umlaute für saubere CSS-Klassennamen (z.B. legendär -> legendär)
         const typeClass = task.type.toLowerCase().replace('ä', 'ae'); 
         card.className = `task-card ${typeClass}`;
         
@@ -100,11 +94,9 @@ function renderTasks() {
             <p>${task.text}</p>
         `;
         
-        // Klick-Logik zum Abhaken
         card.addEventListener('click', () => {
             card.classList.toggle('completed');
             
-            // Punkte berechnen (Punkte dazu oder wieder abziehen, wenn rückgängig)
             if (card.classList.contains('completed')) {
                 currentPoints += task.points;
             } else {
@@ -118,10 +110,10 @@ function renderTasks() {
     });
 }
 
-// Starte das Generieren der Aufgaben
-renderTasks();
-
-}
-
-// Initialer Test-Aufruf, um zu sehen, ob der Balken funktioniert (wird später durch Firebase ersetzt)
+// Initiale Aufrufe
 updateScore(0);
+if (typeof jgaTasks !== 'undefined') {
+    renderTasks();
+} else {
+    viewTasks.innerHTML = '<h2 style="color: red;">Fehler: Aufgaben konnten nicht geladen werden. Bitte tasks.js prüfen!</h2>';
+}
