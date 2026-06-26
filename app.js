@@ -1,5 +1,13 @@
 // --- DOM Elemente abrufen ---
 const scoreElement = document.getElementById('current-score');
+// --- REGELN MODAL LOGIK ---
+document.getElementById('btn-rules').addEventListener('click', () => {
+    document.getElementById('rules-modal').classList.remove('hidden');
+});
+
+document.getElementById('btn-close-rules').addEventListener('click', () => {
+    document.getElementById('rules-modal').classList.add('hidden');
+});
 const progressBar = document.getElementById('progress-bar');
 
 const btnTasks = document.getElementById('btn-tasks');
