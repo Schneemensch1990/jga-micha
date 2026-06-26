@@ -156,4 +156,51 @@ input[type="password"] {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+
+/* Aufgaben Karten */
+.task-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+/* Klick-Animation */
+.task-card:active {
+    transform: scale(0.98);
+}
+
+/* Abgehakt-Zustand */
+.task-card.completed {
+    opacity: 0.5;
+    text-decoration: line-through;
+    border-color: var(--werder-green);
+}
+
+.task-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.task-category {
+    color: var(--werder-green);
+}
+
+.task-points {
+    background-color: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Farben nach Typ (Bronze, Silber, Gold, Legendär) */
+.bronze .task-points { color: var(--bronze); }
+.silber .task-points { color: var(--silber); }
+.gold .task-points { color: var(--gold); }
+.legendaer .task-points { color: var(--legend); }
 }
