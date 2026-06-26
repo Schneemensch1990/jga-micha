@@ -171,31 +171,6 @@ function renderTasks() {
         viewTasks.appendChild(card);
     });
 }
-        // HIER WIRD DAS EMOJI EINGEFÜGT:
-        card.innerHTML = `
-            <div class="task-info">
-                <span class="task-category">${getCategoryEmoji(task.category)}</span>
-                <span class="task-points">+${task.points}</span>
-            </div>
-            <p>${task.text}</p>
-        `;
-        
-        card.addEventListener('click', () => {
-            if (!isAdmin) {
-                alert("🔒 Nur Admins dürfen Aufgaben abhaken!");
-                return;
-            }
-            let updatedTasks = [...completedTaskIds];
-            if (isCompleted) {
-                updatedTasks = updatedTasks.filter(id => id !== task.id);
-            } else {
-                updatedTasks.push(task.id);
-            }
-            gameDocRef.update({ completedTasks: updatedTasks });
-        });
-        viewTasks.appendChild(card);
-    });
-}
 
 // --- QUIZ RENDERN ---
 function renderQuiz() {
